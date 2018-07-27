@@ -1,0 +1,20 @@
+{
+  "name": "liri-node-app",
+  "version": "1.0.0",
+  "description": "This project is a node based program that is a Language Interpretation and Recognition Interface pulling queries from Twitter, Spotify and the OMDB APIs.",
+  "main": "keys.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Thorleye/liri-node-app.git"
+  },
+  "keywords": ["LIRI", "Twitter API", "Spotify API", "OMDB API"],
+  "author": "Eric Thorley",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Thorleye/liri-node-app/issues"
+  },
+  "homepage": "https://github.com/Thorleye/liri-node-app#readme"
+}
