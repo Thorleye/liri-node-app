@@ -2,46 +2,80 @@ require("dotenv").config();
 var keys = require("./keys.js");
 var request = require("request");
 var Spotify = require('node-spotify-api')
+var fs = require('fs')
+var Twitter = require('twitter')
 
 var spotify = new Spotify(keys.spotify);
-exports.spotify = {
-    id: process.env.SPOTIFY_ID,
-    secret: process.env.SPOTIFY_SECRET
-};
-//var client = new Twitter(keys.twitter);
+
+var client = new Twitter(keys.twitter);
+
 
 var searchType = process.argv[2]
-var searchQuery = [];
+var searchQuery = "";
 for (i = 3; i < process.argv.length; i++){
     searchQuery = searchQuery + (process.argv[i]) + "+"
  }
 
-//OMDB request//
+var tweetLookup = function(){
+    var params = {screen_name: 'lirinodeproject'};
+    client.get('statuses/user_timeline', params, function(error, tweets, response) {
+        if (error){console.log("error:" + error)}
+    if (!error) {
+        //console.log(tweets);
+        for (i=0; i < tweets.length; i++){
+            console.log(tweets[i].text)
+        }
+    }
+    });
+}
+
 var movieLookup = function(){
+    if (searchQuery === ""){searchQuery === "Mr.+Nodody"}
     var queryUrl = "http://www.omdbapi.com/?t=" + searchQuery + "&y=&plot=short&apikey=aa361df7";
     request(queryUrl, function(error, response, body){
         if (!error && response.statusCode === 200) {
-            console.log(JSON.parse(body));
             console.log("Movie Title: " + JSON.parse(body).Title + "\nReleased: " + JSON.parse(body).Year + "\nIMDB Rating: " + JSON.parse(body).imdbRating +
-            "\nRotten Tomatoes Rating :" + JSON.parse(body).Source + "\nProduced in: " + JSON.parse(body).Country + "\nLanguage: " + JSON.parse(body).Language + "\nPlot: " + JSON.parse(body).Plot +
+            "\nRotten Tomatoes Rating :" + JSON.parse(body).Ratings[1].Value + "\nProduced in: " + JSON.parse(body).Country + "\nLanguage: " + JSON.parse(body).Language + "\nPlot: " + JSON.parse(body).Plot +
             "\nStarring: " + JSON.parse(body).Actors);
-            console.log(searchQuery)
         }
     })
 }
 
 var spotifyLookup = function(){
-    spotify.request('https://api.spotify.com/v1/song/' + searchQuery)
-    .then(function(data) {
-      console.log(data); 
-      console.log(spotify)
-    })
-    .catch(function(err) {
-      console.error('Error occurred: ' + err); 
-      console.log(spotify)
-    });
+    if (searchQuery === ""){searchQuery === "The+Sign"}
+    spotify.search({ type: 'track' , query: searchQuery, limit: 1})
+        .then(function(data) {
+        var information = data.tracks.items[0];
+        console.log("Song Name: " + information.name);
+        var artists = "";
+        for (i=0; i < information.artists.length; i++){
+            var artists = artists + information.artists[i].name + ", ";
+        } 
+        console.log("artist(s): " + artists);
+        console.log ("Off of the album: " + information.album.name); 
+        console.log("Preview: " + information.preview_url)
+        })
+        .catch(function(err) {
+        console.error('Error occurred: ' + err); 
+        });
 }
 
+var doIt = function(){
+    fs.readFile("random.txt", 'utf8', function(err, data){
+        if (err){
+            console.log("error: " + err)
+        }
+        var terms = data.split(',')
+        var termsArray = [terms[0], terms[1]]
+            if (termsArray[0] === "movie-this"){
+                movieLookup(termsArray[1])
+            }
+            if (termsArray[0] === "spotify-this-song"){
+                spotifyLookup(termsArray[1])
+           }
+
+    })
+}
 
 if (searchType === "movie-this"){
     movieLookup()
@@ -49,9 +83,11 @@ if (searchType === "movie-this"){
 if (searchType === "spotify-this-song"){
      spotifyLookup()
 }
-//if (searchType === 'my-tweets'){
-//    tweetLookup()
-//}
-//if (searchType === "do-what-it-says"){
-//    doIt()
-//}
+
+if (searchType === 'my-tweets'){
+    tweetLookup()
+}
+
+if (searchType === "do-what-it-says"){
+    doIt()
+}
