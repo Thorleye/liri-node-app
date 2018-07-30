@@ -6,37 +6,39 @@ var fs = require('fs')
 var Twitter = require('twitter')
 
 var spotify = new Spotify(keys.spotify);
-
 var client = new Twitter(keys.twitter);
 
 
 var searchType = process.argv[2]
-var searchQuery = "";
-for (i = 3; i < process.argv.length; i++){
-    searchQuery = searchQuery + (process.argv[i]) + "+"
+var searchQuery = process.argv[3];
+for (i = 4; i < process.argv.length; i++){
+    searchQuery = searchQuery + "+" + (process.argv[i]) 
  }
 
 var tweetLookup = function(){
     var params = {screen_name: 'lirinodeproject'};
     client.get('statuses/user_timeline', params, function(error, tweets, response) {
-        if (error){console.log("error:" + error)}
-    if (!error) {
-        //console.log(tweets);
-        for (i=0; i < tweets.length; i++){
-            console.log(tweets[i].text)
+        if (error){
+            console.log("error:" + error)
         }
-    }
+        if (!error) {
+            for (i=0; i < tweets.length; i++){
+                console.log("\n" + tweets[i].text + "   | Tweeted on: " + tweets[i].created_at)
+            }
+        }
     });
 }
 
 var movieLookup = function(){
-    if (searchQuery === ""){searchQuery === "Mr.+Nodody"}
+    console.log("Query:" + searchQuery)
+    if (searchQuery == undefined){searchQuery = "Mr.+Nodody"}
     var queryUrl = "http://www.omdbapi.com/?t=" + searchQuery + "&y=&plot=short&apikey=aa361df7";
     request(queryUrl, function(error, response, body){
         if (!error && response.statusCode === 200) {
             console.log("Movie Title: " + JSON.parse(body).Title + "\nReleased: " + JSON.parse(body).Year + "\nIMDB Rating: " + JSON.parse(body).imdbRating +
-            "\nRotten Tomatoes Rating :" + JSON.parse(body).Ratings[1].Value + "\nProduced in: " + JSON.parse(body).Country + "\nLanguage: " + JSON.parse(body).Language + "\nPlot: " + JSON.parse(body).Plot +
+            "\nRotten Tomatoes Rating: " + JSON.parse(body).Ratings[1].Value + "\nProduced in: " + JSON.parse(body).Country + "\nLanguage: " + JSON.parse(body).Language + "\nPlot: " + JSON.parse(body).Plot +
             "\nStarring: " + JSON.parse(body).Actors);
+            fs.appendFile("random.txt", ","+ searchType + " " + searchQuery)
         }
     })
 }
@@ -54,6 +56,7 @@ var spotifyLookup = function(){
         console.log("artist(s): " + artists);
         console.log ("Off of the album: " + information.album.name); 
         console.log("Preview: " + information.preview_url)
+        fs.appendFile("random.txt", ","+ searchType + " " + searchQuery)
         })
         .catch(function(err) {
         console.error('Error occurred: ' + err); 
