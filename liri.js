@@ -22,6 +22,7 @@ var tweetLookup = function(){
             console.log("error:" + error)
         }
         if (!error) {
+            console.log("Liri node apps official tweets:")
             for (i=0; i < tweets.length; i++){
                 console.log("\n" + tweets[i].text + "   | Tweeted on: " + tweets[i].created_at)
             }
@@ -71,10 +72,12 @@ var doIt = function(){
         var terms = data.split(',')
         var termsArray = [terms[0], terms[1]]
             if (termsArray[0] === "movie-this"){
-                movieLookup(termsArray[1])
+                searchQuery = termsArray[1]
+                movieLookup()
             }
             if (termsArray[0] === "spotify-this-song"){
-                spotifyLookup(termsArray[1])
+                searchQuery = termsArray[1]
+                spotifyLookup()
            }
 
     })

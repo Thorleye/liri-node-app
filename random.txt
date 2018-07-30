@@ -1,2 +1,2 @@
-spotify-this-song I want it that way
-,movie-this a+cure+for+wellness
+spotify-this-song, I want it that way
+,movie-this, a+cure+for+wellness,do-what-it-says  I want it that way
