@@ -8,7 +8,6 @@ var Twitter = require('twitter')
 var spotify = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter);
 
-
 var searchType = process.argv[2]
 var searchQuery = process.argv[3];
 for (i = 4; i < process.argv.length; i++){
@@ -97,3 +96,4 @@ if (searchType === 'my-tweets'){
 if (searchType === "do-what-it-says"){
     doIt()
 }
+else {console.log("Commands are: movie-this , spotify-this-song , my-tweets & do-what-it-says")};
