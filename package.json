@@ -10,11 +10,22 @@
     "type": "git",
     "url": "git+https://github.com/Thorleye/liri-node-app.git"
   },
-  "keywords": ["LIRI", "Twitter API", "Spotify API", "OMDB API"],
+  "keywords": [
+    "LIRI",
+    "Twitter API",
+    "Spotify API",
+    "OMDB API"
+  ],
   "author": "Eric Thorley",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Thorleye/liri-node-app/issues"
   },
-  "homepage": "https://github.com/Thorleye/liri-node-app#readme"
+  "homepage": "https://github.com/Thorleye/liri-node-app#readme",
+  "dependencies": {
+    "dotenv": "^6.0.0",
+    "request": "^2.87.0",
+    "require": "^2.4.20"
+  },
+  "devDependencies": {}
 }
