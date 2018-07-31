@@ -30,8 +30,9 @@ var tweetLookup = function(){
 }
 
 var movieLookup = function(){
-    console.log("Query:" + searchQuery)//remove this
-    if (searchQuery === undefined){searchQuery = "Mr.+Nodody"}
+    if (!searchQuery){
+        searchQuery = "Mr.+Nodody";
+    }
     var queryUrl = "http://www.omdbapi.com/?t=" + searchQuery + "&y=&plot=short&apikey=aa361df7";
     request(queryUrl, function(error, response, body){
         if (!error && response.statusCode === 200) {
@@ -44,7 +45,9 @@ var movieLookup = function(){
 }
 
 var spotifyLookup = function(){
-    if (searchQuery === undefined){searchQuery === "The+Sign"}
+    if (!searchQuery){
+        searchQuery = "The+Sign";
+    }
     spotify.search({ type: 'track' , query: searchQuery, limit: 1})
         .then(function(data) {
         var information = data.tracks.items[0];
