@@ -30,39 +30,46 @@ var tweetLookup = function(){
 }
 
 var movieLookup = function(){
-    if (!searchQuery){
+    if (!searchQuery || searchQuery === undefined){
         searchQuery = "Mr.+Nodody";
     }
     var queryUrl = "http://www.omdbapi.com/?t=" + searchQuery + "&y=&plot=short&apikey=aa361df7";
     request(queryUrl, function(error, response, body){
+        if (error){
+            console.log("error: " + error);
+        }
         if (!error && response.statusCode === 200) {
             console.log("Movie Title: " + JSON.parse(body).Title + "\nReleased: " + JSON.parse(body).Year + "\nIMDB Rating: " + JSON.parse(body).imdbRating +
             "\nRotten Tomatoes Rating: " + JSON.parse(body).Ratings[1].Value + "\nProduced in: " + JSON.parse(body).Country + "\nLanguage: " + JSON.parse(body).Language + "\nPlot: " + JSON.parse(body).Plot +
             "\nStarring: " + JSON.parse(body).Actors);
-            fs.appendFile("random.txt", ","+ searchType + " " + searchQuery);
+            fs.appendFile("random.txt", ","+ searchType + " " + searchQuery, (error) => {
+                if (error) {console.log('error:' + error) }
+            });
         }
     })
 }
 
 var spotifyLookup = function(){
-    if (!searchQuery){
+    if (!searchQuery || searchQuery === undefined){
         searchQuery = "The+Sign";
     }
     spotify.search({ type: 'track' , query: searchQuery, limit: 1})
         .then(function(data) {
-        var information = data.tracks.items[0];
-        console.log("Song Name: " + information.name);
-        var artists = "";
-        for (i=0; i < information.artists.length; i++){
-            var artists = artists + information.artists[i].name + ", ";
-        } 
-        console.log("artist(s): " + artists);
-        console.log ("Off of the album: " + information.album.name); 
-        console.log("Preview: " + information.preview_url);
-        fs.appendFile("random.txt", ","+ searchType + " " + searchQuery)
+            var information = data.tracks.items[0];
+            console.log("Song Name: " + information.name);
+            var artists = "";
+            for (i=0; i < information.artists.length; i++){
+                var artists = artists + information.artists[i].name + ", ";
+            } 
+            console.log("artist(s): " + artists);
+            console.log ("Off of the album: " + information.album.name); 
+            console.log("Preview: " + information.preview_url);
+            fs.appendFile("random.txt", ","+ searchType + " " + searchQuery, (error) => {
+                if (error) {console.log("error: " + error)}
+            })
         })
         .catch(function(err) {
-        console.error('Error occurred: ' + err); 
+            console.error('Error occurred: ' + err); 
         });
 }
 
